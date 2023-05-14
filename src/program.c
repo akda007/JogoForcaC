@@ -153,7 +153,10 @@ int main(void){
         scanf(" %c", &guess);
 
         if (strchr(word, guess)){
-            guessed_right[++gr_pos] = guess;
+            if (!strchr(guessed_right, guess)){
+                guessed_right[++gr_pos] = guess;
+            }
+            
             continue;
         }
 
