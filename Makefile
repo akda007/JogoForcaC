@@ -3,21 +3,29 @@ CFLAGS =-Wall -g
 
 BDIR=bin
 SDIR=src
+ODIR=obj
+
+BIN=$(BDIR)/program.exe
 
 SRC=$(wildcard $(SDIR)/*.c)
-BIN=$(BDIR)/program.exe
+OBJ=$(patsubst $(SDIR)/%.c,$(ODIR)/%.o, $(SRC))
+
 
 WORDSNAME=words.txt
 WORDSFILE=$(BDIR)/$(WORDSNAME)
 
 all: $(BIN) $(WORDSFILE)
-$(BIN): $(SRC)
+
+$(BIN): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 $(WORDSFILE): $(WORDSNAME)
-	cp $(WORDSNAME) $@
+	$(COPY) $(WORDSNAME) $@
 
 clean:
-	rm -f bin/*
+	rm -f $(BDIR)/* $(ODIR)/*
 
 .PHONY: all clean
