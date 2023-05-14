@@ -13,6 +13,7 @@ int get_word_count(const char* file_name){
     
     if (file == NULL){
         printf("Unable to open %s\n", file_name);
+        fclose(file);
         exit(2);
     }
 
@@ -31,18 +32,43 @@ int get_word_count(const char* file_name){
     }
 
     fclose(file);
+
+    if (l == 0){
+        puts("Error: empty words.txt file!");
+        fclose(file);
+        exit(2);
+    }
     return l;
+}
+
+int str_find_c(char str[], char c){
+    int i, len = strlen(str);
+    for (i = 0; str[i] != c; i++){
+        if (i > len)
+            return 0;
+    }
+    return i; 
 }
 
 void load_words(const char* file_name, char** list, int count){
     FILE* file = fopen(file_name, "r");
     if (file == NULL){
         printf("Unable to open %s\n", file_name);
+        fclose(file);
+
         exit(2);
     }
 
+    char line[MAX_WORD_SIZE];
     for(int i = 0; i < count; i++){
-        fscanf(file, "%[^\n]", list[i]);
+        if (fgets(line, sizeof(line), file) != NULL){
+            int len = str_find_c(line, '\n');
+            if (len > 0){
+                line[len] = '\0';
+            }
+
+            strncpy(list[i], line, MAX_WORD_SIZE);
+        }
     }
 
     fclose(file);
@@ -142,6 +168,7 @@ int main(void){
     switch(c){
         case 'y':
         case 'Y':
+            completed = false;
             goto start;
             break;
 
