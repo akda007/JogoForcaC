@@ -7,7 +7,7 @@ BDIR=bin
 SDIR=src
 ODIR=obj
 
-BIN=$(BDIR)/program.exe
+BIN=$(BDIR)/game.exe
 SRC=$(wildcard $(SDIR)/*.c)
 OBJ=$(patsubst $(SDIR)/%.c,$(ODIR)/%.o, $(SRC))
 
