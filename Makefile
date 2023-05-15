@@ -1,3 +1,5 @@
+#Requires mingw bin added to path in windows
+
 CC = gcc
 CFLAGS =-Wall
 
