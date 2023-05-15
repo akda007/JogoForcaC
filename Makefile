@@ -3,9 +3,9 @@
 CC = gcc
 CFLAGS =-Wall
 
-BDIR=./bin
-SDIR=./src
-ODIR=./obj
+BDIR=bin
+SDIR=src
+ODIR=obj
 
 BIN=$(BDIR)/game.exe
 SRC=$(wildcard $(SDIR)/*.c)
@@ -19,11 +19,17 @@ all: $(BIN) $(WORDSFILE)
 debug: CFLAGS += -g
 debug: clean all
 
-$(BIN): $(OBJ)
+$(BIN): $(OBJ) | $(BDIR)
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(OBJ): $(SRC)
+$(OBJ): $(SRC) | $(ODIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(ODIR):
+	mkdir -p $@
+
+$(BDIR):
+	mkdir -p $@
 
 $(WORDSFILE): $(WORDSNAME)
 	cp $(WORDSNAME) $@
