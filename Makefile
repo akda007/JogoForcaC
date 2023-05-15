@@ -3,9 +3,9 @@
 CC = gcc
 CFLAGS =-Wall
 
-BDIR=bin
-SDIR=src
-ODIR=obj
+BDIR=./bin
+SDIR=./src
+ODIR=./obj
 
 BIN=$(BDIR)/game.exe
 SRC=$(wildcard $(SDIR)/*.c)
