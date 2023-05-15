@@ -110,7 +110,8 @@ int main(void){
 
     size_t gr_size = strlen(word) + 1;
     guessed_right = (char*)malloc(sizeof(char) * gr_size);
-    
+    memset(guessed_right, ' ', gr_size);
+
     if (guessed_right == NULL){
         puts(ERROR_MEMORY);
         return -1;
