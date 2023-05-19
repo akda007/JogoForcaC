@@ -3,6 +3,13 @@
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
+#include <locale.h>
+
+#include "..\include\game.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #define MAX_WORD_SIZE 100
 
@@ -76,6 +83,16 @@ void load_words(const char* file_name, char** list, int count){
 
 int main(void){
     srand(time(NULL));
+    setlocale(LC_ALL, "");
+
+    #ifdef _WIN32
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD mode;
+
+    GetConsoleMode(handle, &mode);
+    mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(handle, mode);
+    #endif
 
     const char* words_file = "words.txt";
 
@@ -100,81 +117,20 @@ int main(void){
 
     load_words(words_file, word_list, word_count);
 
-    int lives, gr_pos;
-    bool completed;
-    char *guessed_right, *word;
-
+    char *word;
     start: //Game loop
     
     word = word_list[rand() % word_count];
 
-    size_t gr_size = strlen(word) + 1;
-    guessed_right = (char*)malloc(sizeof(char) * gr_size);
-    memset(guessed_right, ' ', gr_size);
+    game_start(word);
 
-    if (guessed_right == NULL){
-        puts(ERROR_MEMORY);
-        return -1;
-    }
-
-    guessed_right[gr_size-1] = '\0';
-    gr_pos = 0;
-    lives = 6;
-
-    while (!completed) {
-        if (lives == 0){
-            printf("Too bad! The word was %s...\n\tGAME OVER\n", word);
-            break;
-        }
-
-        completed = false;
-
-        if (guessed_right[0] != ' ') guessed_right[0] = ' ';
-
-        printf("Word: ");
-        completed = true;
-        for (int i=0; i<gr_size-1; i++){
-            if (strchr(guessed_right, word[i])){
-                putchar(word[i]);
-            } else {
-                putchar('_');
-                completed = false;
-            }
-        }
-
-        printf("\tLives: %d", lives);
-
-        if (completed){
-            printf("\n\nNice!\nYou guessed the word '%s' correctly!\n", word);
-            break;
-        }
-
-        char guess;
-        printf("\nYour guess: ");
-        scanf(" %c", &guess);
-
-        if (strchr(word, guess)){
-            if (!strchr(guessed_right, guess)){
-                guessed_right[++gr_pos] = guess;
-            }
-            
-            continue;
-        }
-
-        lives--;
-    }
-
-    free(guessed_right);
-
-    puts("Play again? (y, n)");
+    puts("\rPlay again? (y, n)");
     char c;
     scanf(" %c", &c);
     switch(c){
         case 'y':
         case 'Y':
-            completed = false;
             goto start;
-            break;
 
         default: break;
     }
