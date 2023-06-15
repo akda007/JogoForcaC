@@ -6,7 +6,7 @@ CFLAGS =-Wall -I$(IDIR)
 BDIR=bin
 SDIR=src
 ODIR=obj
-IDIR=includes
+IDIR=include
 
 BIN=$(BDIR)/game.exe
 SRC=$(wildcard $(SDIR)/*.c)
